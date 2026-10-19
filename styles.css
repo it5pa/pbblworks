@@ -1,0 +1,426 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  /* overflow: hidden; */
+  background-color: #ffffff;
+  font-family: "Din17", Helvetica, Arial, sans-serif;
+  user-select: none;
+}
+
+@font-face {
+  font-family: "Din17";
+  src: url("./fonts/Din17\ Regular.otf") format("otf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "PlantinStd";
+  src: url("./fonts/PlantinStd.otf") format("otf");
+  font-weight: 500;
+  font-style: normal;
+}
+
+.canvas {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Base style for individual scattered letter links */
+.scattered-letter {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  text-decoration: none;
+  font-size: clamp(1.2rem, 2vw, 2.2rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.2em;
+  height: 2.2em;
+  cursor: pointer;
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Color definitions per link */
+.works {
+  color: #af9b4b;
+}
+
+.about {
+  color: #e44132;
+}
+
+.contact {
+  color: #698ca0;
+}
+
+.pbbl {
+  color: #9b9ba0;
+}
+
+/* 
+ * Hover state: 
+ * When hovering over any letter of a group, all letters belonging 
+ * to that group highlight slightly, while others fade out gracefully.
+ */
+.scattered-letter:hover {
+  /* transform: translate(-50%, -50%) scale(1.25);
+  font-weight: 500; */
+  text-decoration: underline;
+}
+
+/* JavaScript toggled group-highlight classes */
+/* .canvas.is-hovering .scattered-letter {
+  opacity: 0.2;
+} */
+
+.canvas.is-hovering .scattered-letter.highlighted {
+  opacity: 1;
+  /* font-weight: 500; */
+   text-decoration: underline;
+  text-underline-offset: 4px; /* optional: cleaner spacing for the underline */
+}
+
+
+/* --- Exact percentage coordinates based on image --- */
+
+/* WORKS (Gold) */
+.letter-w-works { left: 4%;  top: 5.5%; }
+.letter-o-works { left: 10.5%; top: 23%; }
+.letter-r-works { left: 17.8%; top: 72%; }
+.letter-k-works { left: 54.8%; top: 63.5%; }
+.letter-s-works { left: 79%;   top: 39%; }
+
+/* ABOUT (Red) */
+.letter-a-about { left: 30.5%; top: 20%; }
+.letter-b-about { left: 36.4%; top: 79%; }
+.letter-o-about { left: 55.5%; top: 54.5%; }
+.letter-u-about { left: 70.6%; top: 66%; }
+.letter-t-about { left: 77.9%; top: 86.8%; }
+
+/* CONTACT (Blue) */
+.letter-c1-contact { left: 25.5%; top: 39%; }
+.letter-o-contact  { left: 36.3%; top: 52.5%; }
+.letter-n-contact  { left: 43.8%; top: 30.5%; }
+.letter-t1-contact { left: 50.5%; top: 42.5%; }
+.letter-a-contact  { left: 54.8%; top: 19%; }
+.letter-c2-contact { left: 73.8%; top: 12%; }
+.letter-t2-contact { left: 88.8%; top: 24.5%; }
+
+/* PBBL (Grey) */
+.letter-p-pbbl  { left: 50.2%; top: 81.8%; }
+.letter-b1-pbbl { left: 61.6%; top: 75%; }
+.letter-b2-pbbl { left: 82.2%; top: 75.2%; }
+.letter-l-pbbl  { left: 90.6%; top: 91.2%; }
+
+
+/* --- ABOUT SECTION --- */
+.section-about {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #ffffff;
+  /* Balanced margins for an editorial reading experience */
+  padding: 6rem 8vw 8rem 8vw;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: #6a6a6a;
+  box-sizing: border-box;
+}
+
+/* Two-Column Grid Layout */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  column-gap: 5.5rem;
+  row-gap: 4.5rem;
+  max-width: 1100px;
+  margin: 0;
+}
+
+.about-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2.8rem;
+}
+
+/* Base text styling */
+.about-block {
+  font-size: 1rem;
+  line-height: 1.55;
+  font-family: "PlantinStd", Georgia, "Times New Roman", Times, serif;
+}
+
+.about-block h4 {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #9E9E9E;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  /* margin-bottom: 0.45rem; */
+  font-family: "Din17", Helvetica, Arial, sans-serif;
+}
+
+.about-block p {
+  color: #9E9E9E;
+  margin-bottom: 0.75rem;
+}
+
+.about-block ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.about-block li {
+  line-height: 1.55;
+  color: #9E9E9E;
+}
+
+.about-block a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --- Scattered Inset Monograms (P B B L) --- */
+
+/* Float the monogram container so text wraps neatly if long, or stays seamlessly inline */
+.pbbl-monogram {
+     color: #9E9E9E;
+  position: relative;
+  display: inline-block;
+  float: left;
+  user-select: none;
+  font-size: 0.95rem;
+  font-weight: 300;
+  font-family: "Din17", Helvetica, Arial, sans-serif;
+margin-right: 0.6rem;
+margin-top: -28px;
+}
+
+.pbbl-monogram span {
+  position: absolute;
+  line-height: 1;
+}
+
+/* Monogram 1 (Top-Left Paragraph: "B top, P left, B right, L bottom") */
+.monogram-1 {
+  width: 70px;
+  height: 52px;
+  /* margin-right: 0.75rem;
+  margin-top: -3px; */
+}
+.monogram-1 .l-p  { left: 0px;  top: 18px; }
+.monogram-1 .l-b1 { left: 16px; top: 0px; }
+.monogram-1 .l-b2 { left: 42px; top: 18px; }
+.monogram-1 .l-l  { left: 22px; top: 38px; }
+
+/* Monogram 2 (Second Paragraph: "B top, L left, P right, B bottom") */
+.monogram-2 {
+  width: 68px;
+  height: 52px;
+  /* margin-right: 0.75rem;
+  margin-top: -3px; */
+}
+.monogram-2 .l-b1 { left: 22px; top: 0px; }
+.monogram-2 .l-l  { left: 2px;  top: 16px; }
+.monogram-2 .l-p  { left: 48px; top: 16px; }
+.monogram-2 .l-b2 { left: 22px; top: 36px; }
+
+/* Monogram 3 (Right Column Paragraph: "P top-left, B1 bottom-left, B2 top-right, L bottom-right") */
+.monogram-3 {
+  width: 58px;
+  height: 48px;
+  /* margin-right: 0.75rem;
+  margin-top: -3px; */
+}
+.monogram-3 .l-p  { left: 0px;  top: 2px; }
+.monogram-3 .l-b1 { left: 2px;  top: 22px; }
+.monogram-3 .l-b2 { left: 30px; top: 12px; }
+.monogram-3 .l-l  { left: 18px; top: 34px; }
+
+/* Responsive view for tablet / mobile screens */
+@media (max-width: 800px) {
+  .section-about {
+    padding: 4rem 1.5rem 6rem 1.5rem;
+  }
+  .about-grid {
+    grid-template-columns: 1fr;
+    row-gap: 2.8rem;
+  }
+}
+
+/* --- IMPRINT MODAL OVERLAY --- */
+.imprint-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.imprint-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Modal Content Card */
+.imprint-modal {
+  position: relative;
+  background: #ffffff;
+  /* width: 90%;
+  max-width: 620px;
+  max-height: 85vh; */
+  overflow-y: auto;
+  padding: 3rem 2.5rem;
+  border-radius: 2px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  font-family: inherit;
+  color: #444;
+}
+
+/* Close Button (X) */
+.imprint-close-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: #777;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0.2rem;
+  transition: color 0.15s ease;
+}
+
+.imprint-close-btn:hover {
+  color: #000;
+}
+
+/* Modal Typography */
+.imprint-modal h2 {
+  font-size: 1.3rem;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+}
+
+.imprint-modal h3 {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 1.4rem;
+  margin-bottom: 0.3rem;
+  color: #222;
+}
+
+.imprint-modal p {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #666;
+  margin-bottom: 0.8rem;
+}
+
+.imprint-modal a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --- FULLSCREEN CONTACT OVERLAY --- */
+.contact-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #ffffff;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.contact-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Big red centered email link */
+.contact-content {
+  text-align: center;
+  padding: 2rem;
+  max-width: 90vw;
+}
+
+.contact-email {
+  color: #e44132; /* Signature bright red/coral */
+  font-size: clamp(2rem, 5.5vw, 5.5rem);
+  font-weight: 300;
+  text-decoration: none;
+  letter-spacing: -0.02em;
+  transition: opacity 0.2s ease, text-decoration 0.2s ease;
+  word-break: break-all;
+  font-family: "PlantinStd", Georgia, "Times New Roman", Times, serif;
+}
+
+.contact-email:hover {
+  text-decoration: underline;
+  text-underline-offset: 8px;
+}
+
+/* Close button pinned to top right */
+.contact-close-btn {
+  position: fixed;
+  top: 2.5rem;
+  right: 3.5rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  line-height: 1;
+  font-weight: 300;
+  color: #777;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.contact-close-btn:hover {
+  color: #000;
+  transform: scale(1.1);
+}
+
+@media (max-width: 600px) {
+  .contact-close-btn {
+    top: 1.5rem;
+    right: 1.5rem;
+  }
+}
