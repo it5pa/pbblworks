@@ -19,16 +19,18 @@ body {
 
 @font-face {
   font-family: "Din17";
-  src: url("./fonts/Din17\ Regular.otf") format("otf");
-  font-weight: normal;
+  src: url("./fonts/Din17-Regular.otf") format("opentype");
+  font-weight: 400;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: "PlantinStd";
-  src: url("./fonts/PlantinStd.otf") format("otf");
+  src: url("./fonts/PlantinStd.otf") format("opentype");
   font-weight: 500;
   font-style: normal;
+  font-display: swap;
 }
 
 .canvas {
@@ -125,6 +127,10 @@ body {
 
 
 /* --- ABOUT SECTION --- */
+#about {
+scroll-margin-top: -3vh;
+}
+
 .section-about {
   width: 100%;
   min-height: 100vh;
@@ -413,6 +419,8 @@ body {
   visibility: hidden;
   pointer-events: none;
   transition: opacity 0.3s ease, visibility 0.3s ease;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .contact-overlay.is-open {
@@ -421,7 +429,7 @@ body {
   pointer-events: auto;
 }
 
-/* Big red centered email link */
+/* Centered email block */
 .contact-content {
   text-align: center;
   padding: 2rem;
@@ -429,7 +437,7 @@ body {
 }
 
 .contact-email {
-  color: #e44132; /* Signature bright red/coral */
+  color: #698ca0;
   font-size: clamp(2rem, 5.5vw, 5.5rem);
   font-weight: 300;
   text-decoration: none;
@@ -437,6 +445,8 @@ body {
   transition: opacity 0.2s ease, text-decoration 0.2s ease;
   word-break: break-all;
   font-family: "PlantinStd", Georgia, "Times New Roman", Times, serif;
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 .contact-email:hover {
@@ -444,31 +454,128 @@ body {
   text-underline-offset: 8px;
 }
 
-/* Close button pinned to top right */
+/* Button container pinned to top right */
 .contact-close-btn {
-  position: fixed;
-  top: 2.5rem;
-  right: 3.5rem;
-  background: none;
+  position: absolute;
+  top: 1.6rem;
+  right: 2rem;
+  background: transparent;
   border: none;
-  font-size: 2rem;
-  line-height: 1;
-  font-weight: 300;
-  color: #777;
   cursor: pointer;
-  padding: 0.5rem;
-  transition: color 0.2s ease, transform 0.2s ease;
+  padding: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10001;
+  transition: transform 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.contact-close-btn:hover {
-  color: #000;
-  transform: scale(1.1);
+/* --- TACTILE IRREGULAR PEBBLE CLOSE ICON --- */
+.pebble-close-icon {
+  position: relative;
+  display: block;
+  width: 28px;
+  height: 22px;
+  background-color: #9b9ba0; /* Soft natural stone grey */
+  /* Irregular 8-value organic pebble contour */
+  border-radius: 64% 36% 58% 42% / 46% 62% 38% 54%;
+  transition: background-color 0.25s ease, transform 0.3s ease;
 }
 
-@media (max-width: 600px) {
+.pebble-close-icon::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.pebble-close-icon::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* Hover: Turns PBBL signature red and subtly rotates */
+.contact-close-btn:hover .pebble-close-icon {
+  background-color: #e44132;
+  transform: rotate(90deg);
+}
+
+.contact-close-btn:active {
+  transform: scale(0.92);
+}
+
+@media (max-width: 768px) {
   .contact-close-btn {
-    top: 1.5rem;
-    right: 1.5rem;
+    top: 1.2rem;
+    right: 1.2rem;
+    padding: 1rem;
+  }
+}
+
+.pronounce-overlay {
+  position: fixed;
+  font-family: "PlantinStd", Georgia, "Times New Roman", Times, serif;
+  inset: 0;
+  background-color: #ffffff;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 8vw;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.35s ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.pronounce-overlay.is-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.pronounce-content {
+  max-width: 1050px;
+  text-align: center;
+}
+
+/* Big Red Statement Typography */
+.pronounce-text {
+  color: #9b9ba0;
+  font-size: clamp(2.2rem, 5.5vw, 5.5rem);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-wrap: balance;
+}
+
+/* Close Pebble Button */
+.pronounce-close {
+  position: absolute;
+  top: 2rem;
+  right: 2.2rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1010;
+}
+
+.pronounce-close:hover .pebble-close-icon {
+  background-color: #e44132; /* Studio signature red */
+}
+
+@media (max-width: 768px) {
+  .pronounce-overlay {
+    padding: 2rem 1.5rem;
+  }
+  .pronounce-close {
+    top: 1.2rem;
+    right: 1.2rem;
+    padding: 1rem;
   }
 }
 
@@ -536,6 +643,57 @@ body.works-body {
 }
 
 /* --- MAIN WORKS DISPLAY --- */
+.project-entry {
+    margin-bottom: 30vh; /* Space between projects */
+    max-width: 900px;
+}
+
+.project-entry.is-wide {
+  width: -moz-fit-content;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 30vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 2. Hero sets the intrinsic width */
+.project-entry.is-wide .works-hero {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem; /* Gap between the 2 hero images */
+  width: 100%;
+}
+
+.project-entry.is-wide .works-hero img {
+  height: clamp(320px, 48vh, 520px);
+  width: auto;
+  display: block;
+}
+
+.project-entry.is-wide .works-thumbnails {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1.2rem;
+    max-width: 950px;
+}
+
+/* Ensure each thumbnail image fills its slot */
+.project-entry.is-wide .thumb-item {
+  width: 100%;
+}
+
+.project-entry.is-wide .thumb-item img {
+width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
 .works-container {
 width: 100%;
   max-width: 1200px;
@@ -547,32 +705,18 @@ width: 100%;
 
 /* Top Row: Cover (Left) + Spread (Right) */
 .works-hero {
-display: inline-flex;
-  justify-content: center;
+  display: flex;
+  justify-content: center; /* Always centers 1, 2, or more images */
   align-items: center;
   gap: 1.2vw;
+  width: 100%;
   margin: 0 auto;
 }
 
-.hero-cover,
-.hero-spread {
-  align-items: center;
-  justify-content: center;
-  flex: 0 0 auto; /* Do NOT force percentage widths */
-}
-
-.hero-cover {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.hero-spread {
-  justify-content: flex-start;
-}
-
 .works-hero img {
-  height: clamp(280px, 48vh, 460px); /* Pinned height so both images scale cleanly together */
+height: clamp(280px, 48vh, 480px);
   width: auto;
+  max-width: 100%;
   object-fit: contain;
   display: block;
 }
@@ -584,7 +728,7 @@ font-size: 0.82rem;
   line-height: 1.5;
   color: #2b2b2b;
   text-align: center;
-  max-width: 760px;
+  max-width: 650px;
   margin: 1.5rem auto;
 }
 
@@ -623,7 +767,7 @@ display: grid;
 
 /* Fullscreen Overlay */
 .slideshow-overlay {
-  position: fixed;
+position: fixed;
   inset: 0;
   background-color: #D7F2FF;
   z-index: 1000;
@@ -633,9 +777,15 @@ display: grid;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-  transition: opacity 0.3s cubic-bezier(0.2, 0, 0, 1), visibility 0.3s ease;
+  /* Smooth color fade when navigating between projects */
+  transition: opacity 0.3s ease, background-color 0.35s ease, visibility 0.3s ease;
   user-select: none;
   -webkit-user-select: none;
+}
+
+/* Grey overlay background: Every 2nd project (2nd, 4th, ...) */
+.slideshow-overlay.is-alt-bg {
+  background-color: #ebebeb; /* or your preferred grey hex */
 }
 
 .slideshow-overlay.is-active {
@@ -646,20 +796,37 @@ display: grid;
 
 /* Main Image Container */
 .slideshow-image-container {
-    width: 90vw;
-  height: 90vh;
-  max-width: 70vw;
-  max-height: 70vh;
+  width: 90vw;
+  max-width: 92vw;
+  height: 86vh;
+  max-height: 88vh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1.2rem;
 }
 
 .slideshow-image-container img {
-width: 100%;
-  height: 100%;
-  object-fit: contain; /* Keeps original proportions without distortion or crop */
+  width: auto;
+  max-width: 100%;
+  max-height: calc(86vh - 4rem);
+  object-fit: contain;
   display: block;
+}
+
+.slideshow-caption {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #2b2b2b;
+  text-align: center;
+  max-width: 760px;
+  margin: 10px 0 0;
+  padding: 0 1rem;
+}
+
+.slideshow-caption em {
+  font-style: italic;
 }
 
 /* Base button reset for slideshow controls */
@@ -716,7 +883,7 @@ width: 100%;
 
 .slideshow-close:hover .pebble-close-icon {
   background-color: #e44132; /* Studio signature red */
-  transform: scale(1.15) rotate(90deg);
+  transform: rotate(90deg);
 }
 
 
@@ -764,26 +931,37 @@ width: 100%;
   /* transform: translateX(4px) scale(1.12); */
 }
 
-.slideshow-close:active,
+/* .slideshow-close:active,
 .slideshow-nav:active {
   transform: scale(0.92);
-}
+} */
 
 @media (max-width: 768px) {
   .slideshow-image-container {
-    max-width: 92vw;
-    max-height: 75vh;
+    height: 62vh;
+    max-height: 64vh;
   }
+
+  .slideshow-image-container img {
+    max-height: calc(62vh - 3.5rem);
+  }
+
+  .slideshow-caption {
+    font-size: 0.75rem;
+  }
+
+  .project-entry.is-wide .works-thumbnails {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+  
   .slideshow-prev {
     left: 0.5rem;
   }
   .slideshow-next {
     right: 0.5rem;
   }
-}
 
-@media (max-width: 768px) {
-  /* 1. Page container & layout */
   body.works-body {
     padding: 1.5rem 1.25rem 4rem 1.25rem;
   }
@@ -806,17 +984,15 @@ width: 100%;
   }
 
   /* 3. Hero items stack vertically on phones */
-  .works-hero {
+.works-hero {
     flex-direction: column;
     gap: 1.25rem;
-    width: 100%;
   }
 
   .works-hero img {
     height: auto;
     max-height: 44vh;
     max-width: 100%;
-    width: auto;
   }
 
   /* 4. Thumbnails grid (2 columns for phones) */

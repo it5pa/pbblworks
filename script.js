@@ -55,44 +55,66 @@ window.addEventListener('keydown', (e) => {
   }
 });
 
-// --- CONTACT OVERLAY CONTROLS ---
-const contactOverlay = document.getElementById('contact-overlay');
-const closeContactBtn = document.getElementById('close-contact');
-const contactLetters = document.querySelectorAll('.scattered-letter[data-group="contact"]');
 
-function openContactModal(e) {
-  if (e) e.preventDefault();
-  if (!contactOverlay) return;
-  contactOverlay.classList.add('is-open');
-  contactOverlay.setAttribute('aria-hidden', 'false');
-  document.body.style.overflow = 'hidden';
-}
 
-function closeContactModal() {
-  if (!contactOverlay) return;
-  contactOverlay.classList.remove('is-open');
-  contactOverlay.setAttribute('aria-hidden', 'true');
-  document.body.style.overflow = '';
-}
+document.addEventListener('DOMContentLoaded', () => {
+  const contactOverlay = document.getElementById('contact-overlay');
+  const closeContactBtn = document.getElementById('close-contact');
+  
+  // Find whatever link/button you use to trigger contact
+  // Adjust this selector to match your HTML (e.g., '#contact-trigger', '.contact-link', or 'a[href="#contact"]')
+  const contactTriggers = document.querySelectorAll('a[href="#contact"], .contact-trigger');
 
-contactLetters.forEach(letter => {
-  letter.addEventListener('click', openContactModal);
-});
+  function openContactModal(e) {
+    if (e) e.preventDefault();
+    if (!contactOverlay) return;
+    contactOverlay.classList.add('is-open');
+    contactOverlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
 
-if (closeContactBtn) closeContactBtn.addEventListener('click', closeContactModal);
+  function closeContactModal() {
+    if (!contactOverlay) return;
+    contactOverlay.classList.remove('is-open');
+    contactOverlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
 
-if (contactOverlay) {
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && contactOverlay.classList.contains('is-open')) {
-      closeContactModal();
-    }
+  // Open triggers
+  contactTriggers.forEach(btn => {
+    btn.addEventListener('click', openContactModal);
   });
-}
+
+  // Close button click
+  if (closeContactBtn) {
+    closeContactBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      closeContactModal();
+    });
+  }
+
+  // Click outside the email link to close
+  if (contactOverlay) {
+    contactOverlay.addEventListener('click', (e) => {
+      if (!e.target.closest('.contact-email')) {
+        closeContactModal();
+      }
+    });
+
+    // Close on Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && contactOverlay.classList.contains('is-open')) {
+        closeContactModal();
+      }
+    });
+  }
+});
 
 // --- GALLERY SLIDESHOW ---
 document.addEventListener('DOMContentLoaded', () => {
   const overlay = document.getElementById('slideshowOverlay');
   const slideImg = document.getElementById('slideshowImage');
+  const slideCaption = document.getElementById('slideshowCaption');
   const closeBtn = document.getElementById('slideshowClose');
   const prevBtn = document.getElementById('slideshowPrev');
   const nextBtn = document.getElementById('slideshowNext');
@@ -100,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!overlay || !slideImg) return;
 
   const galleryItems = Array.from(document.querySelectorAll('.gallery-item'));
+  const allProjects = Array.from(document.querySelectorAll('.project-entry'));
   let currentIndex = 0;
 
   function showImage(index) {
@@ -108,8 +131,32 @@ document.addEventListener('DOMContentLoaded', () => {
     if (index >= galleryItems.length) index = 0;
 
     currentIndex = index;
-    slideImg.src = galleryItems[currentIndex].src;
-    slideImg.alt = galleryItems[currentIndex].alt || 'Slideshow image';
+    const currentItem = galleryItems[currentIndex];
+
+    // Update image
+    slideImg.src = currentItem.src;
+    slideImg.alt = currentItem.alt || 'Slideshow image';
+
+    // Find parent project article
+    const parentProject = currentItem.closest('.project-entry');
+
+    // Toggle background: Odd projects (1st, 3rd) = #D7F2FF, Even (2nd, 4th) = Grey
+    if (parentProject) {
+      const projectIndex = allProjects.indexOf(parentProject); // 0 = Project 1, 1 = Project 2...
+      if (projectIndex % 2 === 1) {
+        overlay.classList.add('is-alt-bg');
+      } else {
+        overlay.classList.remove('is-alt-bg');
+      }
+    } else {
+      overlay.classList.remove('is-alt-bg');
+    }
+
+    // Pull the caption from whichever project article owns this image
+    if (slideCaption) {
+      const projectCaption = parentProject ? parentProject.querySelector('.works-caption') : null;
+      slideCaption.innerHTML = projectCaption ? projectCaption.innerHTML : '';
+    }
   }
 
   function openSlideshow(index) {
@@ -170,26 +217,69 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // Mobile swipe gestures
   let touchStartX = 0;
-let touchEndX = 0;
+  let touchEndX = 0;
 
-overlay.addEventListener('touchstart', (e) => {
-  touchStartX = e.changedTouches[0].screenX;
-}, { passive: true });
+  overlay.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
 
-overlay.addEventListener('touchend', (e) => {
-  touchEndX = e.changedTouches[0].screenX;
-  handleSwipe();
-}, { passive: true });
-
-function handleSwipe() {
-  const swipeThreshold = 45; // Minimum travel in px to trigger page turn
-  if (touchEndX < touchStartX - swipeThreshold) {
-    showImage(currentIndex + 1); // Swipe left -> next image
-  }
-  if (touchEndX > touchStartX + swipeThreshold) {
-    showImage(currentIndex - 1); // Swipe right -> prev image
-  }
-}
+  overlay.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    const swipeThreshold = 45;
+    if (touchEndX < touchStartX - swipeThreshold) {
+      showImage(currentIndex + 1);
+    }
+    if (touchEndX > touchStartX + swipeThreshold) {
+      showImage(currentIndex - 1);
+    }
+  }, { passive: true });
 });
+
+// --- PBBL PRONUNCIATION OVERLAY CONTROLS ---
+const pronounceOverlay = document.getElementById('pronounce-overlay');
+const closePronounceBtn = document.getElementById('close-pronounce');
+const pbblLetters = document.querySelectorAll('.scattered-letter[data-group="pbbl"]');
+
+function openPronounceModal(e) {
+  if (e) e.preventDefault();
+  if (!pronounceOverlay) return;
+  pronounceOverlay.classList.add('is-open');
+  pronounceOverlay.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePronounceModal() {
+  if (!pronounceOverlay) return;
+  pronounceOverlay.classList.remove('is-open');
+  pronounceOverlay.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+}
+
+// Bind clicks to all PBBL letters
+pbblLetters.forEach(letter => {
+  letter.addEventListener('click', openPronounceModal);
+});
+
+// Close button click
+if (closePronounceBtn) {
+  closePronounceBtn.addEventListener('click', closePronounceModal);
+}
+
+// Click anywhere on the overlay background to close
+if (pronounceOverlay) {
+  pronounceOverlay.addEventListener('click', (e) => {
+    if (e.target === pronounceOverlay || e.target.classList.contains('pronounce-content')) {
+      closePronounceModal();
+    }
+  });
+
+  // Close on Escape key
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && pronounceOverlay.classList.contains('is-open')) {
+      closePronounceModal();
+    }
+  });
+}
 
