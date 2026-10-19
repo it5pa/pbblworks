@@ -14,7 +14,7 @@ body {
   /* overflow: hidden; */
   background-color: #ffffff;
   font-family: "Din17", Helvetica, Arial, sans-serif;
-  user-select: none;
+  /* user-select: none; */
 }
 
 @font-face {
@@ -37,20 +37,42 @@ body {
   height: 100vh;
 }
 
-/* Base style for individual scattered letter links */
+/* --- SCATTERED LETTERS --- */
 .scattered-letter {
   position: absolute;
   transform: translate(-50%, -50%);
   text-decoration: none;
   font-size: clamp(1.2rem, 2vw, 2.2rem);
+  font-weight: 300;
   display: flex;
   align-items: center;
   justify-content: center;
   width: 2.2em;
   height: 2.2em;
   cursor: pointer;
-  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.2, 0, 0, 1);
+  user-select: none;
+  -webkit-user-select: none;
+    /* Smooth fade-in and return transition */
+  transition: opacity 0.45s cubic-bezier(0.25, 1, 0.5, 1), 
+              text-decoration 0.2s ease;
 }
+
+/* While hovering the canvas, make all other letters disappear */
+.canvas.is-hovering .scattered-letter:not(.highlighted) {
+  opacity: 0;
+  pointer-events: none; /* Prevents hovering/clicking invisible letters */
+  pointer-events: none;
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Keep the active group fully visible and underlined */
+.canvas.is-hovering .scattered-letter.highlighted {
+  opacity: 1;
+  text-decoration: none;
+  /* text-decoration: underline;
+  text-underline-offset: 4px; */
+}
+
 
 /* Color definitions per link */
 .works {
@@ -67,29 +89,6 @@ body {
 
 .pbbl {
   color: #9b9ba0;
-}
-
-/* 
- * Hover state: 
- * When hovering over any letter of a group, all letters belonging 
- * to that group highlight slightly, while others fade out gracefully.
- */
-.scattered-letter:hover {
-  /* transform: translate(-50%, -50%) scale(1.25);
-  font-weight: 500; */
-  text-decoration: underline;
-}
-
-/* JavaScript toggled group-highlight classes */
-/* .canvas.is-hovering .scattered-letter {
-  opacity: 0.2;
-} */
-
-.canvas.is-hovering .scattered-letter.highlighted {
-  opacity: 1;
-  /* font-weight: 500; */
-   text-decoration: underline;
-  text-underline-offset: 4px; /* optional: cleaner spacing for the underline */
 }
 
 
@@ -132,9 +131,10 @@ body {
   background-color: #ffffff;
   /* Balanced margins for an editorial reading experience */
   padding: 6rem 8vw 8rem 8vw;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: "Din17", Helvetica, Arial, sans-serif;
   color: #6a6a6a;
   box-sizing: border-box;
+  position: relative;
 }
 
 /* Two-Column Grid Layout */
@@ -155,7 +155,7 @@ body {
 
 /* Base text styling */
 .about-block {
-  font-size: 1rem;
+  font-size: 1.2rem;
   line-height: 1.55;
   font-family: "PlantinStd", Georgia, "Times New Roman", Times, serif;
 }
@@ -172,7 +172,7 @@ body {
 
 .about-block p {
   color: #9E9E9E;
-  margin-bottom: 0.75rem;
+  /* margin-bottom: 0.75rem; */
 }
 
 .about-block ul {
@@ -201,11 +201,11 @@ body {
   display: inline-block;
   float: left;
   user-select: none;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 300;
   font-family: "Din17", Helvetica, Arial, sans-serif;
-margin-right: 0.6rem;
-margin-top: -28px;
+    margin-right: 0.6rem;
+    margin-top: -32px;
 }
 
 .pbbl-monogram span {
@@ -257,6 +257,53 @@ margin-top: -28px;
   .about-grid {
     grid-template-columns: 1fr;
     row-gap: 2.8rem;
+  }
+}
+
+/* Pebble Link Container */
+.pebble-home-link {
+  position: absolute;
+  right: 5vw;
+  bottom: 8vw;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  z-index: 10;
+  padding: 10px; /* Expands clickable hit-area */
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* 
+ * Irregular, organic pebble shape using asymmetric border-radius.
+ * Default color matches the subtle grey/charcoal of PBBL, turns red on hover.
+ */
+.pebble-shape {
+  display: block;
+  width: 38px;
+  height: 28px;
+  background-color: #9b9ba0; /* Soft grey matching the PBBL letters */
+  border-radius: 64% 36% 58% 42% / 45% 62% 38% 55%; /* Natural pebble silhouette */
+  transform: rotate(-12deg);
+  transition: background-color 0.25s ease, transform 0.35s ease;
+}
+
+/* Hover effect: turns signature red and nudges slightly */
+.pebble-home-link:hover .pebble-shape {
+  background-color: #e44132; /* Signature red */
+  /* transform: rotate(0deg) scale(1.12); */
+}
+
+.pebble-home-link:active .pebble-shape {
+  transform: scale(0.95);
+}
+
+/* Responsive spacing adjustment */
+@media (max-width: 600px) {
+  .pebble-home-link {
+    right: 2rem;
+    bottom: 2rem;
   }
 }
 
@@ -422,5 +469,416 @@ margin-top: -28px;
   .contact-close-btn {
     top: 1.5rem;
     right: 1.5rem;
+  }
+}
+
+/* --- WORKS PAGE LAYOUT --- */
+
+body.works-body {
+  padding: 3.5rem 5rem; /* Equal left and right padding */
+  box-sizing: border-box;
+} 
+
+.works-body {
+  position: relative;
+  background-color: #ffffff;
+  min-height: 100vh;
+  padding: 3.5rem 7vw 4rem 4vw; /* Space on the right for fixed vertical nav */
+  box-sizing: border-box;
+  font-family: "PlantinStd", Georgia, "Times New Roman", Times, serif;
+}
+
+/* --- VERTICAL RIGHT NAVIGATION --- */
+.side-nav {
+  position: fixed;
+  top: 0;
+  right: 0;
+  height: 100vh;
+  width: 6vw;
+  min-width: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3.5rem 0 3.5rem 0;
+  box-sizing: border-box;
+  z-index: 100;
+  user-select: none;
+  -webkit-user-select: none;
+  font-family: "Din17", Helvetica, Arial, sans-serif;
+}
+
+.side-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
+  text-decoration: none;
+  font-size: 1.05rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  transition: opacity 0.2s ease;
+}
+
+/* Grey PBBL stack in top right */
+.pbbl-stack {
+  color: #9b9ba0;
+}
+
+/* Red ABOUT stack in bottom right */
+.about-stack {
+  color: #e44132;
+}
+
+.side-stack:hover span {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* --- MAIN WORKS DISPLAY --- */
+.works-container {
+width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Top Row: Cover (Left) + Spread (Right) */
+.works-hero {
+display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.2vw;
+  margin: 0 auto;
+}
+
+.hero-cover,
+.hero-spread {
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto; /* Do NOT force percentage widths */
+}
+
+.hero-cover {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.hero-spread {
+  justify-content: flex-start;
+}
+
+.works-hero img {
+  height: clamp(280px, 48vh, 460px); /* Pinned height so both images scale cleanly together */
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+
+/* Editorial Caption */
+.works-caption {
+font-size: 0.82rem;
+  line-height: 1.5;
+  color: #2b2b2b;
+  text-align: center;
+  max-width: 760px;
+  margin: 1.5rem auto;
+}
+
+.works-caption em {
+  font-style: italic;
+}
+
+/* Bottom Strip: 4 Equal Columns */
+.works-thumbnails {
+display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.2vw;
+  width: 100%;
+  max-width: 950px; /* Adjust to match the visual footprint of the hero row */
+  margin: 0 auto;
+}
+
+.thumb-item {
+ width: 100%;
+  height: auto;
+  display: block;
+}
+
+.thumb-item img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1.45 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+/* Make gallery items clickable */
+.gallery-item {
+  cursor: pointer;
+}
+
+/* Fullscreen Overlay */
+.slideshow-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: #D7F2FF;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s cubic-bezier(0.2, 0, 0, 1), visibility 0.3s ease;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.slideshow-overlay.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Main Image Container */
+.slideshow-image-container {
+    width: 90vw;
+  height: 90vh;
+  max-width: 70vw;
+  max-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slideshow-image-container img {
+width: 100%;
+  height: 100%;
+  object-fit: contain; /* Keeps original proportions without distortion or crop */
+  display: block;
+}
+
+/* Base button reset for slideshow controls */
+.slideshow-close,
+.slideshow-nav {
+  position: absolute;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1010;
+  transition: transform 0.25s ease, opacity 0.2s ease;
+}
+
+/* --- CLOSE PEBBLE (Top Right) --- */
+.slideshow-close {
+  top: 1.6rem;
+  right: 2rem;
+}
+
+/* Organic small rounded pebble */
+.pebble-close-icon {
+  position: relative;
+  display: block;
+  width: 24px;
+  height: 20px;
+  background-color: #9b9ba0;
+  border-radius: 62% 38% 54% 46% / 48% 65% 35% 52%;
+  transition: background-color 0.25s ease, transform 0.3s ease;
+}
+
+/* Fine hairline 'x' carved into the stone */
+.pebble-close-icon::before,
+.pebble-close-icon::after {
+  /* content: ""; */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 1.5px;
+  background-color: #ffffff;
+}
+
+.pebble-close-icon::before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.pebble-close-icon::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.slideshow-close:hover .pebble-close-icon {
+  background-color: #e44132; /* Studio signature red */
+  transform: scale(1.15) rotate(90deg);
+}
+
+
+/* --- PREV / NEXT PEBBLE ARROWS --- */
+.slideshow-prev {
+  left: 2rem;
+}
+
+.slideshow-next {
+  right: 2rem;
+}
+
+/* Directional teardrop river pebble (Left) */
+.pebble-arrow-left {
+  display: block;
+  width: 28px;
+  height: 14px;
+  background-color: #9b9ba0;
+  /* Asymmetric contour tapering gently towards the left */
+  border-radius: 25% 75% 70% 30% / 50% 60% 40% 50%;
+  transform: rotate(5deg);
+  transition: background-color 0.25s ease, transform 0.25s ease;
+}
+
+/* Directional teardrop river pebble (Right) */
+.pebble-arrow-right {
+  display: block;
+  width: 28px;
+  height: 14px;
+  background-color: #9b9ba0;
+  /* Asymmetric contour tapering gently towards the right */
+  border-radius: 75% 25% 30% 70% / 60% 50% 50% 40%;
+  transform: rotate(-5deg);
+  transition: background-color 0.25s ease, transform 0.25s ease;
+}
+
+/* Hover States: slight tactile push & color shift to red */
+.slideshow-prev:hover .pebble-arrow-left {
+  background-color: #e44132;
+  /* transform: translateX(-4px) scale(1.12); */
+}
+
+.slideshow-next:hover .pebble-arrow-right {
+  background-color: #e44132;
+  /* transform: translateX(4px) scale(1.12); */
+}
+
+.slideshow-close:active,
+.slideshow-nav:active {
+  transform: scale(0.92);
+}
+
+@media (max-width: 768px) {
+  .slideshow-image-container {
+    max-width: 92vw;
+    max-height: 75vh;
+  }
+  .slideshow-prev {
+    left: 0.5rem;
+  }
+  .slideshow-next {
+    right: 0.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  /* 1. Page container & layout */
+  body.works-body {
+    padding: 1.5rem 1.25rem 4rem 1.25rem;
+  }
+
+  /* 2. Top Navigation for Mobile (horizontal instead of fixed vertical right) */
+  .side-nav {
+    position: static;
+    height: auto;
+    width: 100%;
+    min-width: 0;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 0 2rem 0;
+  }
+
+  .side-stack {
+    flex-direction: row;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  /* 3. Hero items stack vertically on phones */
+  .works-hero {
+    flex-direction: column;
+    gap: 1.25rem;
+    width: 100%;
+  }
+
+  .works-hero img {
+    height: auto;
+    max-height: 44vh;
+    max-width: 100%;
+    width: auto;
+  }
+
+  /* 4. Thumbnails grid (2 columns for phones) */
+  .works-thumbnails {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    max-width: 100%;
+  }
+
+  .works-caption {
+    font-size: 0.78rem;
+    margin: 1.25rem auto;
+    padding: 0 0.5rem;
+  }
+
+  /* 5. Slideshow overlay sizing & positioning */
+  .slideshow-image-container {
+    width: 94vw;
+    height: 70vh;
+    max-height: 72vh;
+  }
+
+  /* Expand touch hit-areas for pebble buttons */
+  .slideshow-close,
+  .slideshow-nav {
+    padding: 1.2rem;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .slideshow-close {
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .slideshow-prev,
+  .slideshow-next {
+    position: absolute;
+    top: auto;
+    bottom: 6vh; /* Distance from bottom of screen */
+    padding: 1rem 1.5rem;
+  }
+
+  /* Move arrows closer to bottom/edges so they don't cover vertical book pages */
+ .slideshow-prev {
+    /* left: calc(50% - 10px); */
+    right: auto;
+  }
+
+ .slideshow-next {
+    /* right: calc(50% - 10px); */
+    left: auto;
+  }
+
+  /* Slightly scale down pebble shapes for small screens */
+  .pebble-close-icon {
+    width: 22px;
+    height: 18px;
+  }
+
+  .pebble-arrow-left,
+  .pebble-arrow-right {
+    width: 24px;
+    height: 12px;
   }
 }
