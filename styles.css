@@ -992,28 +992,43 @@ position: fixed;
   }
 
   /* 3. Hero items stack vertically on phones */
-.works-hero {
+  .works-hero {
+    height: auto !important;
+    min-height: 0 !important;
+    display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    align-items: center;
   }
 
-  .works-hero img {
-    height: auto;
-    max-height: 44vh;
-    max-width: 100%;
+  /* Reset all fixed/clamp height constraints on mobile */
+  .works-hero img,
+  .works-hero img:only-child,
+  .works-hero > div:only-child img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;         /* Let aspect-ratio determine height */
+    min-height: 0 !important;        /* Clear any inherited min-height */
+    max-height: none !important;
+    display: block;
   }
+
+  /* Keep the spacing between hero, caption, and thumbnails tight & consistent */
+  .works-caption {
+    margin-top: 1.25rem !important;
+    margin-bottom: 1.75rem !important;
+    font-size: 0.78rem;
+    padding: 0 0.5rem;
+  }
+
+ /* .works-hero img {
+    max-height: 44vh;
+  } */
 
   /* 4. Thumbnails grid (2 columns for phones) */
   .works-thumbnails {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;
     max-width: 100%;
-  }
-
-  .works-caption {
-    font-size: 0.78rem;
-    margin: 1.25rem auto;
-    padding: 0 0.5rem;
   }
 
   /* 5. Slideshow overlay sizing & positioning */
